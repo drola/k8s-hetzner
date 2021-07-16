@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - secretName: whoami-k8s-catdad-net-tls
+      hosts:
+        - whoami.k8s.catdad.net
+  rules:
+    - host: whoami.k8s.catdad.net
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: whoami
+                port:
+                  number: 80
+

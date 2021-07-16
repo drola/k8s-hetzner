@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weight-logger
+  namespace: weight-logger
+spec:
+  ports:
+    - protocol: TCP
+      name: web
+      port: 80
+  selector:
+    app: weight-logger
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: weight-logger
+  name: weight-logger
+  labels:
+    app: weight-logger
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weight-logger
+  template:
+    metadata:
+      labels:
+        app: weight-logger
+    spec:
+      containers:
+        - name: weight-logger
+          image: ghcr.io/drola/weight-logger-pwa:latest
+          ports:
+            - name: web
+              containerPort: 80
+
